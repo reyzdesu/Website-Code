@@ -90,7 +90,7 @@
             margin-bottom: 5px;
         }
 
-        select, .qty-container {
+        select {
             width: 100%;
             padding: 12px;
             border: 2px solid #ff9800;
@@ -98,28 +98,6 @@
             background: #222;
             color: white;
             font-size: 16px;
-        }
-
-        .qty-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-qty {
-            background: #ff5722;
-            border: none;
-            color: white;
-            padding: 8px 12px;
-            font-size: 18px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-qty:hover {
-            background: #e64a19;
         }
 
         .total {
@@ -218,6 +196,15 @@
                 "permanen": 50000
             }
         };
+
+        document.getElementById("produk").addEventListener("change", function() {
+            document.querySelectorAll(".form-group.hidden").forEach(el => el.classList.add("hidden"));
+
+            let selectedProduct = this.value;
+            if (selectedProduct === "sewa-bot") {
+                document.getElementById("sewa-bot-options").classList.remove("hidden");
+            }
+        });
 
         document.getElementById("sewa-bot-durasi").addEventListener("change", function() {
             let price = prices.sewaBot[this.value] || 0;
