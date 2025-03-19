@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Sedang Dalam Perbaikan</title>
+    <title>Reyz Store - Sedang Dalam Perbaikan</title>
 
     <!-- Favicon -->
     <link rel="icon" href="favicon.png" type="image/png">
@@ -21,7 +21,7 @@
         }
 
         body {
-            background: linear-gradient(to right, #1e1e1e, #121212);
+            background: linear-gradient(to right, #3a0ca3, #7209b7);
             color: white;
             text-align: center;
             display: flex;
@@ -38,14 +38,14 @@
 
         h1 {
             font-size: 48px;
-            color: #ff9800;
+            color: #f72585;
             text-transform: uppercase;
             margin-bottom: 10px;
         }
 
         p {
             font-size: 20px;
-            color: #bbb;
+            color: #ddd;
             margin-bottom: 20px;
         }
 
@@ -53,14 +53,17 @@
             width: 100%;
             max-width: 400px;
             margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .loading-bar {
             width: 100%;
             height: 5px;
-            background: #ff5722;
+            background: #560bad;
             position: relative;
             overflow: hidden;
+            border-radius: 5px;
         }
 
         .loading-bar::after {
@@ -68,7 +71,7 @@
             position: absolute;
             width: 0%;
             height: 100%;
-            background: #ff9800;
+            background: #f72585;
             animation: loading 3s infinite;
         }
 
@@ -77,6 +80,16 @@
             50% { width: 70%; left: 15%; }
             100% { width: 100%; left: 0; }
         }
+
+        /* Audio Player */
+        .audio-container {
+            margin-top: 20px;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -84,8 +97,16 @@
     <div class="container">
         <h1>Website Sedang Dalam Perbaikan</h1>
         <p>Kami sedang melakukan beberapa peningkatan. Silakan kembali lagi nanti.</p>
-        <img class="image" src="https://files.catbox.moe/xhvy7s.jpg" alt="Maintenance">
+        <img class="image" src="https://files.catbox.moe/3mffcl.jpg" alt="Maintenance">
         <div class="loading-bar"></div>
+
+        <!-- Audio Player -->
+        <div class="audio-container">
+            <audio controls autoplay loop>
+                <source src="https://files.catbox.moe/rw2z8s.opus" type="audio/ogg">
+                Browser Anda tidak mendukung pemutar audio.
+            </audio>
+        </div>
     </div>
 
 </body>
