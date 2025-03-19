@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reyz Store - Store Bot WhatsApp</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <!-- Thumbnail untuk Sosial Media -->
+    <meta property="og:title" content="Reyz Store - Store Bot WhatsApp">
+    <meta property="og:description" content="Jual Sewa Bot, Panel Pterodactyl, dan Script Bot WhatsApp dengan harga murah!">
+    <meta property="og:image" content="https://files.catbox.moe/xhvy7s.jpg">
+    <meta property="og:url" content="https://reyzstore.my.id">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://files.catbox.moe/xhvy7s.jpg">
+
+    <style>
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: #fff;
+        }
+
+        /* Loading Bar */
+        .loading-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            z-index: 9999;
+        }
+
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: #ff9800;
+            animation: loading 2.5s ease-out forwards;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(to right, #ff9800, #ff5722);
+            padding: 15px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #ff9800;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select, .qty-container {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ff9800;
+            border-radius: 5px;
+            background: #222;
+            color: white;
+            font-size: 16px;
+        }
+
+        .qty-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-qty {
+            background: #ff5722;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-qty:hover {
+            background: #e64a19;
+        }
+
+        .total {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 10px;
+            color: #ff9800;
+            font-size: 18px;
+            display: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: #ff5722;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #e64a19;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #ff5722;
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+    </div>
+
+    <header>
+        Reyz Store - Store Bot WhatsApp
+    </header>
+
+    <div class="container">
+        <h2>Pilih Produk</h2>
+
+        <div class="form-group">
+            <label for="produk">Produk:</label>
+            <select id="produk">
+                <option value="" selected disabled>Pilih Produk</option>
+                <option value="sewa-bot">Sewa Bot WhatsApp</option>
+                <option value="panel">Panel Pterodactyl</option>
+                <option value="sc-bot">Script Bot WhatsApp</option>
+            </select>
+        </div>
+
+        <div class="form-group hidden" id="sewa-bot-options">
+            <label for="sewa-bot-durasi">Sewa Bot WhatsApp:</label>
+            <select id="sewa-bot-durasi">
+                <option value="" selected disabled>Pilih Durasi</option>
+                <option value="7" data-price="5000">7 Hari - Rp 5.000</option>
+                <option value="30" data-price="10000">30 Hari - Rp 10.000</option>
+                <option value="365" data-price="30000">365 Hari - Rp 30.000</option>
+                <option value="permanen" data-price="50000">Permanen - Rp 50.000</option>
+            </select>
+        </div>
+
+        <p class="total" id="total-price-container">Total: Rp <span id="total-price">0</span></p>
+
+        <button class="btn" id="buy-now">Buy Now</button>
+    </div>
+
+    <footer>
+        &copy; 2025 Reyz Store. Semua hak dilindungi.
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => document.querySelector(".loading-bar-container").style.display = "none", 2500);
+        });
+
+        let prices = {
+            sewaBot: {
+                "7": 5000,
+                "30": 10000,
+                "365": 30000,
+                "permanen": 50000
+            }
+        };
+
+        document.getElementById("sewa-bot-durasi").addEventListener("change", function() {
+            let price = prices.sewaBot[this.value] || 0;
+            document.getElementById("total-price").textContent = price.toLocaleString();
+            document.getElementById("total-price-container").style.display = "block";
+        });
+
+        document.getElementById("buy-now").addEventListener("click", function() {
+            let durasi = document.getElementById("sewa-bot-durasi").value;
+            let harga = prices.sewaBot[durasi] || 0;
+            let message = `Hallo Kak, Saya ingin menyewa bot dengan:\n\nDurasi: ${durasi} Hari\nHarga: Rp ${harga.toLocaleString()}\n\nRespon secepatnya ya kak.`;
+            let waUrl = `https://wa.me/6288983163720?text=${encodeURIComponent(message)}`;
+            window.location.href = waUrl;
+        });
+    </script>
+
+</body>
+</html>
