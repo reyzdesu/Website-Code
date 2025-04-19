@@ -1,42 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reyz Store - Toko Bot WhatsApp</title>
+  <title>Toko Bot WhatsApp</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Loading Spinner -->
-  <div id="loading">
+  <div class="loading" id="loading">
     <div class="spinner"></div>
   </div>
-
-  <!-- Header -->
   <header>
-    <div class="menu-icon" onclick="toggleTheme()">&#9776;</div>
-    <h1>Reyz Store</h1>
-    <div class="theme-toggle" onclick="toggleTheme()">Toggle Theme</div>
+    <div class="menu-icon">☰</div>
+    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
   </header>
-
-  <!-- Main Content -->
   <main>
-    <section class="products centered">
-      <h2>Pilih Produk</h2>
-      <div class="product-list">
-        <div class="product" onclick="selectProduct('sewabot')">Sewa Bot</div>
-        <div class="product" onclick="selectProduct('scriptbot')">Script Bot WhatsApp</div>
-        <div class="product" onclick="selectProduct('panel')">Panel Pterodactyl</div>
-        <div class="product" onclick="selectProduct('vps')">VPS Digital Ocean</div>
-      </div>
+    <section class="hero">
+      <h1>Toko Bot WhatsApp</h1>
+      <p>Pilih produk dan hubungi kami untuk pembelian bot!</p>
     </section>
+    <section class="section products">
+      <div class="card product-select" onclick="showProductDetails('sewabot')">Sewa Bot</div>
+      <div class="card product-select" onclick="showProductDetails('scriptbot')">Script Bot WhatsApp</div>
+      <div class="card product-select" onclick="showProductDetails('panel')">Panel Pterodactyl</div>
+      <div class="card product-select" onclick="showProductDetails('vps')">VPS Digital Ocean</div>
+    </section><section class="section product-details" id="product-details"></section>
 
-    <section id="product-details" class="centered"></section>
-    <section id="product-options" class="centered"></section>
-    <section id="product-price" class="centered"></section>
+<section class="section contact">
+  <div class="card">
+    <h3>Hubungi Kami</h3>
+    <p>Klik <a href="https://wa.me/6288983163720">di sini</a> untuk menghubungi admin.</p>
+  </div>
+</section>
+
   </main>
-
-  <!-- Script -->
+  <footer>
+    Creator: <strong>Reyz Store</strong>
+  </footer>
   <script src="script.js"></script>
 </body>
 </html>
