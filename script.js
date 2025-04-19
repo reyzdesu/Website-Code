@@ -22,7 +22,7 @@ function selectProduct(product) {
   if (product === "sewabot") {
     details.innerHTML = `<h3>Sewa Bot</h3><p>Pilih Durasi:</p>`;
     options.innerHTML = `
-      <select onchange="showPrice(this.value, 'sewabot')">
+      <select onchange="showPrice(this.value, 'Sewa Bot')">
         <option value="">-- Pilih Durasi --</option>
         <option value="3k">7 Hari</option>
         <option value="5k">15 Hari</option>
@@ -34,7 +34,7 @@ function selectProduct(product) {
   else if (product === "scriptbot") {
     details.innerHTML = `<h3>Script Bot WhatsApp</h3><p>Pilih Script:</p>`;
     options.innerHTML = `
-      <select onchange="showPrice(this.value, 'scriptbot')">
+      <select onchange="showPrice(this.value, 'Script Bot WhatsApp')">
         <option value="">-- Pilih Script --</option>
         <option value="50k">Akari - Free Update</option>
         <option value="30k">Akari - No Update</option>
@@ -45,7 +45,7 @@ function selectProduct(product) {
   else if (product === "panel") {
     details.innerHTML = `<h3>Panel Pterodactyl</h3><p>Pilih Tipe:</p>`;
     options.innerHTML = `
-      <select onchange="showPrice(this.value, 'panel')">
+      <select onchange="showPrice(this.value, 'Panel Pterodactyl')">
         <option value="">-- Pilih Tipe --</option>
         <option value="10k">1GB - 10GB</option>
         <option value="11k">Unlimited</option>
@@ -62,7 +62,7 @@ function showPrice(priceText, product) {
   if (!priceText) return;
   const price = document.getElementById("product-price");
   price.innerHTML = `<p>Harga: <strong>${priceText}</strong></p>
-    <a href="https://wa.me/6288983163720?text=Halo%20saya%20ingin%20membeli%20produk%20${product}%20dengan%20harga%20${priceText}" target="_blank">
+    <a href="https://wa.me/6288983163720?text=Halo%20saya%20ingin%20membeli%20produk%20${encodeURIComponent(product)}%20dengan%20harga%20${encodeURIComponent(priceText)}" target="_blank">
       <button class="buy">Buy Now</button>
     </a>`;
 }
