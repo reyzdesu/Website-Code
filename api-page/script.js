@@ -253,9 +253,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 link.setAttribute('aria-label', name);
                 
                 // Add icon based on URL
-                if (url.includes('github')) {
-                    link.innerHTML = `<i class="fab fa-github"></i> ${name}`;
-                } else if (url.includes('docs') || url.includes('documentation')) {
+                if (url.includes('docs') || url.includes('documentation')) {
                     link.innerHTML = `<i class="fas fa-book"></i> ${name}`;
                 } else {
                     link.innerHTML = `<i class="fas fa-external-link-alt"></i> ${name}`;
