@@ -618,190 +618,44 @@ document.addEventListener('DOMContentLoaded', async () => {
                         labelContainer.appendChild(tooltipIcon);
                     }
                     
-                    paramGroup.appendChild(labelContainer);
-                    
-                    // Create input with enhanced styling
-                    const inputContainer = document.createElement('div');
-                    inputContainer.className = 'input-container';
-                    
-                    const inputField = document.createElement('input');
-                    inputField.type = 'text';
-                    inputField.className = 'form-control custom-input';
-                    inputField.id = `param-${param}`;
-                    inputField.placeholder = `Enter ${param}...`;
-                    inputField.dataset.param = param;
-                    inputField.required = true;
-                    inputField.autocomplete = "off";
-                    
-                    // Add animation and validation events
-                    inputField.addEventListener('focus', () => {
-                        inputContainer.classList.add('input-focused');
-                    });
-                    
-                    inputField.addEventListener('blur', () => {
-                        inputContainer.classList.remove('input-focused');
-                        
-                        // Validate on blur
-                        if (!inputField.value.trim()) {
-                            inputField.classList.add('is-invalid');
-                        } else {
-                            inputField.classList.remove('is-invalid');
-                        }
-                    });
-                    
-                    inputField.addEventListener('input', validateInputs);
-                    
-                    inputContainer.appendChild(inputField);
-                    paramGroup.appendChild(inputContainer);
-                    paramContainer.appendChild(paramGroup);
-                });
-                
-                // Check for inner description and add with enhanced styling
-                const currentItem = settings.categories
-                    .flatMap(category => category.items)
-                    .find(item => item.path === apiPath);
-
-                if (currentItem && currentItem.innerDesc) {
-                    const innerDescDiv = document.createElement('div');
-                    innerDescDiv.className = 'inner-desc';
-                    innerDescDiv.innerHTML = `<i class="fas fa-info-circle"></i> ${currentItem.innerDesc.replace(/\n/g, '<br>')}`;
-                    paramContainer.appendChild(innerDescDiv);
-                }
-
-                modalRefs.queryInputContainer.appendChild(paramContainer);
-                modalRefs.submitBtn.classList.remove('d-none');
-
-                // Enhanced submit button handler
-                modalRefs.submitBtn.onclick = async () => {
-                    const inputs = modalRefs.queryInputContainer.querySelectorAll('input');
-                    const newParams = new URLSearchParams();
-                    let isValid = true;
-
-                    inputs.forEach(input => {
-                        if (!input.value.trim()) {
-                            isValid = false;
-                            input.classList.add('is-invalid');
-                            input.parentElement.classList.add('shake-animation');
-                            setTimeout(() => {
-                                input.parentElement.classList.remove('shake-animation');
-                            }, 500);
-                        } else {
-                            input.classList.remove('is-invalid');
-                            newParams.append(input.dataset.param, input.value.trim());
-                        }
-                    });
-
-                    if (!isValid) {
-                        // Enhanced error message with animation
-                        const errorMsg = document.createElement('div');
-                        errorMsg.className = 'alert alert-danger mt-3 fade-in';
-                        errorMsg.innerHTML = '<i class="fas fa-exclamation-circle"></i> Please fill in all required fields.';
-                        
-                        // Remove existing error message if any
-                        const existingError = modalRefs.queryInputContainer.querySelector('.alert');
-                        if (existingError) existingError.remove();
-                        
-                        modalRefs.queryInputContainer.appendChild(errorMsg);
-                        
-                        // Shake the submit button for feedback
-                        modalRefs.submitBtn.classList.add('shake-animation');
-                        setTimeout(() => {
-                            modalRefs.submitBtn.classList.remove('shake-animation');
-                        }, 500);
-                        
-                        return;
-                    }
-
-                    // Enhanced loading animation
-                    modalRefs.submitBtn.disabled = true;
-                    modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
-
-                    const apiUrlWithParams = `${window.location.origin}${apiPath.split('?')[0]}?${newParams.toString()}`;
-                    
-                    // Improved animated transition
-                    modalRefs.queryInputContainer.style.opacity = '0';
-                    setTimeout(() => {
-                        modalRefs.queryInputContainer.innerHTML = '';
-                        modalRefs.queryInputContainer.style.opacity = '1';
-                        modalRefs.submitBtn.classList.add('d-none');
-                        handleApiRequest(apiUrlWithParams, modalRefs, apiName);
-                    }, 300);
-                };
-                
-                // Initialize tooltips
-                const tooltips = modalRefs.queryInputContainer.querySelectorAll('[data-bs-toggle="tooltip"]');
-                tooltips.forEach(tooltip => {
-                    new bootstrap.Tooltip(tooltip);
-                });
-            } else {
-                handleApiRequest(baseApiUrl, modalRefs, apiName);
-            }
-
-            modal.show();
-        });
-
-        // Enhanced input validation with visual feedback
-        function validateInputs() {
-            const submitBtn = document.getElementById('submitQueryBtn');
-            const inputs = document.querySelectorAll('.param-container input');
-            const isValid = Array.from(inputs).every(input => input.value.trim() !== '');
-            
-            if (isValid) {
-                submitBtn.disabled = false;
-                submitBtn.classList.add('btn-active');
-            } else {
-                submitBtn.disabled = true;
-                submitBtn.classList.remove('btn-active');
-            }
-            
-            // Remove validation error on input
-            this.classList.remove('is-invalid');
-            
-            // Remove error message when user starts typing
-            const errorMsg = document.querySelector('.alert.alert-danger');
-            if (errorMsg && this.value.trim() !== '') {
-                errorMsg.classList.add('fade-out');
-                setTimeout(() => errorMsg.remove(), 300);
-            }
-        }
-
-        // Enhanced API request handler with improved animations and error handling
-        async function handleApiRequest(apiUrl, modalRefs, apiName) {
+          async function handleApiRequest(apiUrl, modalRefs, apiName) {
             modalRefs.spinner.classList.remove('d-none');
             modalRefs.container.classList.add('d-none');
-            
-            // Display the endpoint with enhanced typing animation
+
+    // Jika ada tombol submit, ubah ke loading
+            if (modalRefs.submitBtn) {
+                modalRefs.submitBtn.disabled = true;
+                modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>         Processing...';
+            }
+
+            // Tampilkan animasi penulisan endpoint
             modalRefs.endpoint.textContent = '';
             modalRefs.endpoint.classList.remove('d-none');
-            
-            const typingSpeed = 20; // ms per character
-            const endpointText = apiUrl;
+
+            const typingSpeed = 20;
             let charIndex = 0;
-            
+
             const typeEndpoint = () => {
-                if (charIndex < endpointText.length) {
-                    modalRefs.endpoint.textContent += endpointText.charAt(charIndex);
+                if (charIndex < apiUrl.length) {
+                    modalRefs.endpoint.textContent += apiUrl.charAt(charIndex);
                     charIndex++;
                     setTimeout(typeEndpoint, typingSpeed);
                 }
             };
-            
             typeEndpoint();
 
             try {
-                // Add request timeout for better UX
+                // Tambahkan timeout
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
-                
-                const response = await fetch(apiUrl, { 
-                    signal: controller.signal 
-                }).catch(error => {
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+                const response = await fetch(apiUrl, { signal: controller.signal }).catch(error => {
                     if (error.name === 'AbortError') {
                         throw new Error('Request timed out. Please try again.');
                     }
                     throw error;
                 });
-                
+
                 clearTimeout(timeoutId);
 
                 if (!response.ok) {
@@ -809,8 +663,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 const contentType = response.headers.get('Content-Type');
+
                 if (contentType && contentType.startsWith('image/')) {
-                    // Handle image response with enhanced animation
+                    // Handle image response
                     const blob = await response.blob();
                     const imageUrl = URL.createObjectURL(blob);
 
@@ -823,13 +678,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     img.style.borderRadius = 'var(--border-radius)';
                     img.style.boxShadow = 'var(--shadow)';
                     img.style.transition = 'var(--transition)';
-                    
-                    // Add hover effect
+
                     img.onmouseover = () => {
                         img.style.transform = 'scale(1.02)';
                         img.style.boxShadow = 'var(--hover-shadow)';
                     };
-                    
                     img.onmouseout = () => {
                         img.style.transform = 'scale(1)';
                         img.style.boxShadow = 'var(--shadow)';
@@ -837,13 +690,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     modalRefs.content.innerHTML = '';
                     modalRefs.content.appendChild(img);
-                    
-                    // Show download button for images
+
                     const downloadBtn = document.createElement('button');
                     downloadBtn.className = 'btn btn-primary mt-3';
                     downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Image';
                     downloadBtn.style.width = '100%';
-                    
+
                     downloadBtn.onclick = () => {
                         const link = document.createElement('a');
                         link.href = imageUrl;
@@ -851,75 +703,73 @@ document.addEventListener('DOMContentLoaded', async () => {
                         document.body.appendChild(link);
                         link.click();
                         document.body.removeChild(link);
-                        
-                        // Show notification
                         showToast('Image download started!', 'success');
                     };
-                    
-                    modalRefs.content.appendChild(downloadBtn);
-                } else {
-                    // Handle JSON response with enhanced syntax highlighting and animation
-                    const data = await response.json();
-                    
-                    // Pretty-print JSON with enhanced syntax highlighting
-                    const formattedJson = syntaxHighlight(JSON.stringify(data, null, 2));
-                    modalRefs.content.innerHTML = formattedJson;
-                    
-                    // Add code folding for large responses with enhanced UI
-                    if (JSON.stringify(data, null, 2).split('\n').length > 15) {
-                        addCodeFolding(modalRefs.content);
-                    }
-                }
 
-                modalRefs.container.classList.remove('d-none');
-                modalRefs.content.classList.remove('d-none');
-                
-                // Animate the response container with enhanced animation
-                modalRefs.container.classList.add('slide-in-bottom');
-                
-                // Show success toast
-                showToast(`Successfully retrieved ${apiName}`, 'success');
-            } catch (error) {
-                // Enhanced error display with more information
-                const errorContainer = document.createElement('div');
-                errorContainer.className = 'error-container fade-in';
-                
-                const errorIcon = document.createElement('div');
-                errorIcon.className = 'error-icon';
-                errorIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                
-                const errorMessage = document.createElement('div');
-                errorMessage.className = 'error-message';
-                errorMessage.innerHTML = `
-                    <h6>Error Occurred</h6>
-                    <p>${error.message}</p>
-                    <div class="mt-2">
-                        <button class="btn btn-sm retry-btn">
-                            <i class="fas fa-sync-alt"></i> Retry Request
-                        </button>
-                    </div>
-                `;
-                
-                errorContainer.appendChild(errorIcon);
-                errorContainer.appendChild(errorMessage);
-                
-                modalRefs.content.innerHTML = '';
-                modalRefs.content.appendChild(errorContainer);
-                modalRefs.container.classList.remove('d-none');
-                modalRefs.content.classList.remove('d-none');
-                
-                // Add retry functionality
-                errorContainer.querySelector('.retry-btn').addEventListener('click', () => {
-                    modalRefs.content.classList.add('d-none');
-                    modalRefs.container.classList.add('d-none');
-                    handleApiRequest(apiUrl, modalRefs, apiName);
-                });
-                
-                // Show error toast
-                showToast('Error retrieving data. Check response for details.', 'error');
-            } finally {
-                modalRefs.spinner.classList.add('d-none');
+                    modalRefs.content.appendChild(downloadBtn);
+
+                } else {
+            // Handle JSON response
+            const data = await response.json();
+            const formattedJson = syntaxHighlight(JSON.stringify(data, null, 2));
+            modalRefs.content.innerHTML = formattedJson;
+
+            if (JSON.stringify(data, null, 2).split('\n').length > 15) {
+                addCodeFolding(modalRefs.content);
             }
+        }
+
+        modalRefs.container.classList.remove('d-none');
+        modalRefs.content.classList.remove('d-none');
+        modalRefs.container.classList.add('slide-in-bottom');
+
+        showToast(`Successfully retrieved ${apiName}`, 'success');
+    } catch (error) {
+        // Tampilkan error
+        const errorContainer = document.createElement('div');
+        errorContainer.className = 'error-container fade-in';
+
+        const errorIcon = document.createElement('div');
+        errorIcon.className = 'error-icon';
+        errorIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'error-message';
+        errorMessage.innerHTML = `
+            <h6>Error Occurred</h6>
+            <p>${error.message}</p>
+            <div class="mt-2">
+                <button class="btn btn-sm retry-btn">
+                    <i class="fas fa-sync-alt"></i> Retry Request
+                </button>
+            </div>
+        `;
+
+        errorContainer.appendChild(errorIcon);
+        errorContainer.appendChild(errorMessage);
+
+        modalRefs.content.innerHTML = '';
+        modalRefs.content.appendChild(errorContainer);
+        modalRefs.container.classList.remove('d-none');
+        modalRefs.content.classList.remove('d-none');
+
+        errorContainer.querySelector('.retry-btn').addEventListener('click', () => {
+            modalRefs.content.classList.add('d-none');
+            modalRefs.container.classList.add('d-none');
+            handleApiRequest(apiUrl, modalRefs, apiName);
+        });
+
+        showToast('Error retrieving data. Check response for details.', 'error');
+    } finally {
+        // Sembunyikan spinner
+        modalRefs.spinner.classList.add('d-none');
+
+        // Reset tombol submit jika ada
+        if (modalRefs.submitBtn) {
+            modalRefs.submitBtn.disabled = false;
+            modalRefs.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
+           }
+          }
         }
         
         // Enhanced code folding functionality
