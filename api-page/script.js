@@ -619,97 +619,91 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                     
           async function handleApiRequest(apiUrl, modalRefs, apiName) {
-            modalRefs.spinner.classList.remove('d-none');
-            modalRefs.container.classList.add('d-none');
+    modalRefs.spinner.classList.remove('d-none');
+    modalRefs.container.classList.add('d-none');
 
-    // Jika ada tombol submit, ubah ke loading
-            if (modalRefs.submitBtn) {
-                modalRefs.submitBtn.disabled = true;
-                modalRefs.submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>         Processing...';
+    // Tampilkan endpoint dengan animasi mengetik
+    modalRefs.endpoint.textContent = '';
+    modalRefs.endpoint.classList.remove('d-none');
+
+    const typingSpeed = 20;
+    let charIndex = 0;
+
+    const typeEndpoint = () => {
+        if (charIndex < apiUrl.length) {
+            modalRefs.endpoint.textContent += apiUrl.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeEndpoint, typingSpeed);
+        }
+    };
+    typeEndpoint();
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 detik timeout
+
+        const response = await fetch(apiUrl, {
+            signal: controller.signal
+        }).catch(error => {
+            if (error.name === 'AbortError') {
+                throw new Error('Request timed out. Please try again.');
             }
+            throw error;
+        });
 
-            // Tampilkan animasi penulisan endpoint
-            modalRefs.endpoint.textContent = '';
-            modalRefs.endpoint.classList.remove('d-none');
+        clearTimeout(timeoutId);
 
-            const typingSpeed = 20;
-            let charIndex = 0;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} - ${response.statusText || 'Unknown error'}`);
+        }
 
-            const typeEndpoint = () => {
-                if (charIndex < apiUrl.length) {
-                    modalRefs.endpoint.textContent += apiUrl.charAt(charIndex);
-                    charIndex++;
-                    setTimeout(typeEndpoint, typingSpeed);
-                }
+        const contentType = response.headers.get('Content-Type') || '';
+
+        modalRefs.content.innerHTML = '';
+
+        if (contentType.startsWith('image/')) {
+            const blob = await response.blob();
+            const imageUrl = URL.createObjectURL(blob);
+
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = apiName;
+            img.className = 'response-image fade-in';
+            img.style.maxWidth = '100%';
+            img.style.height = 'auto';
+            img.style.borderRadius = 'var(--border-radius)';
+            img.style.boxShadow = 'var(--shadow)';
+            img.style.transition = 'var(--transition)';
+
+            img.onmouseover = () => {
+                img.style.transform = 'scale(1.02)';
+                img.style.boxShadow = 'var(--hover-shadow)';
             };
-            typeEndpoint();
+            img.onmouseout = () => {
+                img.style.transform = 'scale(1)';
+                img.style.boxShadow = 'var(--shadow)';
+            };
 
-            try {
-                // Tambahkan timeout
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 15000);
+            modalRefs.content.appendChild(img);
 
-                const response = await fetch(apiUrl, { signal: controller.signal }).catch(error => {
-                    if (error.name === 'AbortError') {
-                        throw new Error('Request timed out. Please try again.');
-                    }
-                    throw error;
-                });
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn btn-primary mt-3';
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Image';
+            downloadBtn.style.width = '100%';
 
-                clearTimeout(timeoutId);
+            downloadBtn.onclick = () => {
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = `${apiName.toLowerCase().replace(/\s+/g, '-')}.${blob.type.split('/')[1]}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText || 'Unknown error'}`);
-                }
+                showToast('Image download started!', 'success');
+            };
 
-                const contentType = response.headers.get('Content-Type');
-
-                if (contentType && contentType.startsWith('image/')) {
-                    // Handle image response
-                    const blob = await response.blob();
-                    const imageUrl = URL.createObjectURL(blob);
-
-                    const img = document.createElement('img');
-                    img.src = imageUrl;
-                    img.alt = apiName;
-                    img.className = 'response-image fade-in';
-                    img.style.maxWidth = '100%';
-                    img.style.height = 'auto';
-                    img.style.borderRadius = 'var(--border-radius)';
-                    img.style.boxShadow = 'var(--shadow)';
-                    img.style.transition = 'var(--transition)';
-
-                    img.onmouseover = () => {
-                        img.style.transform = 'scale(1.02)';
-                        img.style.boxShadow = 'var(--hover-shadow)';
-                    };
-                    img.onmouseout = () => {
-                        img.style.transform = 'scale(1)';
-                        img.style.boxShadow = 'var(--shadow)';
-                    };
-
-                    modalRefs.content.innerHTML = '';
-                    modalRefs.content.appendChild(img);
-
-                    const downloadBtn = document.createElement('button');
-                    downloadBtn.className = 'btn btn-primary mt-3';
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download Image';
-                    downloadBtn.style.width = '100%';
-
-                    downloadBtn.onclick = () => {
-                        const link = document.createElement('a');
-                        link.href = imageUrl;
-                        link.download = `${apiName.toLowerCase().replace(/\s+/g, '-')}.${blob.type.split('/')[1]}`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                        showToast('Image download started!', 'success');
-                    };
-
-                    modalRefs.content.appendChild(downloadBtn);
-
-                } else {
-            // Handle JSON response
+            modalRefs.content.appendChild(downloadBtn);
+        } else if (contentType.includes('application/json')) {
             const data = await response.json();
             const formattedJson = syntaxHighlight(JSON.stringify(data, null, 2));
             modalRefs.content.innerHTML = formattedJson;
@@ -717,6 +711,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (JSON.stringify(data, null, 2).split('\n').length > 15) {
                 addCodeFolding(modalRefs.content);
             }
+        } else {
+            const text = await response.text();
+            modalRefs.content.innerHTML = `<pre>${text}</pre>`;
         }
 
         modalRefs.container.classList.remove('d-none');
@@ -725,7 +722,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         showToast(`Successfully retrieved ${apiName}`, 'success');
     } catch (error) {
-        // Tampilkan error
         const errorContainer = document.createElement('div');
         errorContainer.className = 'error-container fade-in';
 
@@ -760,17 +756,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         showToast('Error retrieving data. Check response for details.', 'error');
-    } finally {
-        // Sembunyikan spinner
+      } finally {
         modalRefs.spinner.classList.add('d-none');
-
-        // Reset tombol submit jika ada
-        if (modalRefs.submitBtn) {
-            modalRefs.submitBtn.disabled = false;
-            modalRefs.submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
-           }
-          }
-        }
+      }
+     }
         
         // Enhanced code folding functionality
         function addCodeFolding(container) {
