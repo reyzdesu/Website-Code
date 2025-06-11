@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 module.exports = function (app) {
-    app.get('/stalk/tiktokstalk', async (req, res) => {
+    app.get('/stalk/tiktok', async (req, res) => {
         const { username } = req.query;
         if (!username) {
             return res.status(400).json({ status: false, message: 'Parameter username diperlukan' });
@@ -38,7 +38,7 @@ module.exports = function (app) {
         } catch (error) {
             res.status(500).json({
                 status: false,
-                message: error.message || 'Terjadi kesalahan saat mengambil data'
+                message: error.message || 'Terjadi kesalahan'
             });
         }
     });
