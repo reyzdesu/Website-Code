@@ -63,6 +63,20 @@
           }
         }
       ]
+    },
+    {
+      "name": "Stalking",
+      "items": [
+        {
+          "name": "TikTok Stalking",
+          "desc": "Stalking tiktok",
+          "path": "/stalk/tiktok?username=",
+          "status": "ready",
+          "params": {
+            "username": "input username"
+          }
+        }
+      ]
     }     
   ]
 }
