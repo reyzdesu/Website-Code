@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 module.exports = function (app) {
-    app.get('/tiktok/stalk', async (req, res) => {
+    app.get('/stalk/tiktok', async (req, res) => {
         const { username } = req.query;
         if (!username) {
             return res.status(400).json({ status: false, message: 'Parameter username diperlukan' });
