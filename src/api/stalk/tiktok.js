@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 module.exports = function (app) {
-    app.get('/stalk/tiktok', async (req, res) => {
+    app.get('/stalk/tiktokstalk', async (req, res) => {
         const { username } = req.query;
         if (!username) {
             return res.status(400).json({ status: false, message: 'Parameter username diperlukan' });
@@ -30,33 +30,9 @@ module.exports = function (app) {
                 return res.status(404).json({ status: false, message: 'User tidak ditemukan' });
             }
 
-            const user = userDetail.userInfo.user;
-            const stats = userDetail.userInfo.stats;
-
             res.status(200).json({
                 status: true,
-                data: {
-                    id: user.id,
-                    secUid: user.secUid,
-                    username: user.uniqueId,
-                    nickname: user.nickname,
-                    bio: user.signature,
-                    avatar: {
-                        thumb: user.avatarThumb,
-                        medium: user.avatarMedium,
-                        large: user.avatarLarger
-                    },
-                    verified: user.verified,
-                    private: user.privateAccount,
-                    region: user.region || null,
-                    stats: {
-                        followers: stats.followerCount,
-                        following: stats.followingCount,
-                        likes: stats.heartCount,
-                        totalHearts: stats.heart,
-                        videos: stats.videoCount
-                    }
-                }
+                data: userDetail.userInfo
             });
 
         } catch (error) {
