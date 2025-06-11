@@ -1,5 +1,5 @@
 {
-  "name": "Reyz - Apis",
+  "name": "Reyz APIs",
   "version": "v1.0.0",
   "description": "Simple and easy to use API.",
   "bannerImage": "/src/banner.jpg",
@@ -12,7 +12,7 @@
   },
   "categories": [
     {
-      "name": "AI (Artificial Intelligence)",
+      "name": "AI",
       "items": [
         {
           "name": "LuminAI",
@@ -22,15 +22,19 @@
           "params": {
             "text": "Text for luminai to respond to"
           }
-        },
-       {
-          "name": "HydroMind",
-          "desc": "See the list of supported AI models here: https://mind.hydrooo.web.id",
-          "path": "/ai/hydromind?text=&model=",
+        }
+      ]
+    },
+    {
+      "name": "Downloader",
+      "items": [
+        {
+          "name": "TikTok Downloader",
+          "desc": "Download video/foto TikTok",
+          "path": "/downloader/tiktok?url=",
           "status": "ready",
           "params": {
-            "text": "Teks atau perintah untuk chat AI",
-            "model":"1See the list of supported AI models here: https://mind.hydrooo.web.id"
+            "url": "Enter the vt tiktok link"
           }
         }
       ]
@@ -47,7 +51,7 @@
       ]
     },
     {
-      "name": "Search Tools",
+      "name": "Search",
       "items": [
         {
           "name": "YouTube",
@@ -55,10 +59,10 @@
           "path": "/search/youtube?q=",
           "status": "ready",
           "params": {
-            "q": "Search query"
+            "query": "input query"
           }
         }
       ]
-    }               
+    }     
   ]
 }
