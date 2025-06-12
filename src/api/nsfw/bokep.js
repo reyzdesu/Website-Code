@@ -1,28 +1,30 @@
+const cheerio = require('cheerio');
+const fetch = require('node-fetch');
+
 module.exports = function(app) {
   app.get('/nsfw/bokep', async (req, res) => {
-    const { url } = req.query;
+    try {
+      const response = await fetch('https://twstalker.com/rinconcaseros');
+      if (!response.ok) throw new Error(`Gagal mengambil halaman: ${response.statusText}`);
 
-    if (!url) {
-      return res.status(400).json({
+      const html = await response.text();
+      const $ = cheerio.load(html);
+
+      const videoSources = $('video source')
+        .map((_, el) => $(el).attr('src'))
+        .get();
+
+      res.status(200).json({
+        status: true,
+        author: $('meta[name="author"]').attr('content') || null,
+        description: $('meta[name="description"]').attr('content') || null,
+        video: videoSources
+      });
+    } catch (err) {
+      res.status(500).json({
         status: false,
-        msg: 'Parameter "url" wajib diisi'
+        msg: err.message
       });
     }
-
-    const result = await getVideo(url);
-
-    if (!result.status) {
-      return res.status(500).json({
-        status: false,
-        msg: result.msg || 'Terjadi kesalahan saat memproses permintaan'
-      });
-    }
-
-    res.status(200).json({
-      status: true,
-      author: result.author,
-      description: result.description,
-      video: result.video
-    });
   });
 };
