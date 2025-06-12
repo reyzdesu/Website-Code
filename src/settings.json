@@ -51,6 +51,17 @@
       ]
     },
     {
+      "name": "Nsfw",
+      "items": [
+        {
+          "name": "Hentai Video",
+          "desc": "Random video hentai",
+          "path": "/nsfw/hentaivid",
+          "status": "ready"
+        }
+      ]
+    },
+    {
       "name": "Search",
       "items": [
         {
