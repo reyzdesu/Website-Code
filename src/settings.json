@@ -58,6 +58,12 @@
           "desc": "Random video hentai",
           "path": "/nsfw/hentaivid",
           "status": "ready"
+        },
+        {
+          "name": "Bokep Video",
+          "desc": "Random video bokepi",
+          "path": "/nsfw/bokep",
+          "status": "ready"
         }
       ]
     },
