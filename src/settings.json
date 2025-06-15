@@ -92,6 +92,16 @@
           "params": {
             "username": "input username"
           }
+        },
+        {
+          "name": "Mobile Legends Stalking",
+          "desc": "Stalking mobile legends",
+          "path": "/stalk/ml?id=&zoneId=",
+          "status": "ready",
+          "params": {
+            "id": "Masukkan ID Mobile Legends",
+            "zoneId": "Masukkan Zone ID"
+          }
         }
       ]
     }     
