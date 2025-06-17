@@ -51,20 +51,29 @@
     </aside>
 
     <!-- Main Content -->
-    <header class="main-header">  
-    <button class="menu-toggle">  
-        <i class="fas fa-bars"></i>  
-    </button>  
-    
-    <!-- Bagian Search API dihapus -->
-
-    <div class="header-actions">  
-        <div class="notification-bell" aria-label="Notifications">  
-            <i class="far fa-bell"></i>  
-            <span class="notification-badge">2</span>  
-        </div>  
-    </div>  
-    </header>
+    <main class="main-wrapper">
+        <header class="main-header">
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="search-container">
+                <div class="input-group">
+                    <span class="input-group-text" aria-hidden="true"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search API..." aria-label="Search API">
+                    <button class="clear-search" id="clearSearch" aria-label="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <div class="notification-bell" aria-label="Notifications">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-badge">2</span>
+                </div>
+            </div>
+        </header>
         
         <!-- Hero Section -->
         <section id="home" class="hero-section">
