@@ -78,6 +78,15 @@
           "params": {
             "query": "input query"
           }
+        },
+        {
+          "name": "Search Charakter",
+          "desc": "charakter",
+          "path": "/search/char?q=",
+          "status": "ready",
+          "params": {
+            "query": "input charakter"
+          }
         }
       ]
     },
