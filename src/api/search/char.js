@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    app.get('/search/anilist/character', async (req, res) => {
+    app.get('/search/character', async (req, res) => {
         const { name } = req.query;
         
         if (!name) {
