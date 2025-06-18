@@ -1,9 +1,9 @@
 const axios = require('axios');
 
 module.exports = function(app) {
-    app.get('/search/character', async (req, res) => {
+    app.get('/search/charakter', async (req, res) => {
         const { name } = req.query;
-        
+
         if (!name) {
             return res.status(400).json({ 
                 status: false, 
@@ -47,6 +47,7 @@ module.exports = function(app) {
             });
 
             const character = response.data.data.Character;
+
             if (!character) {
                 return res.status(404).json({ 
                     status: false, 
@@ -75,13 +76,13 @@ module.exports = function(app) {
                     : null
             };
 
-            res.status(200).json({
+            return res.status(200).json({
                 status: true,
                 result: result
             });
         } catch (error) {
             console.error(error);
-            res.status(500).json({ 
+            return res.status(500).json({ 
                 status: false, 
                 error: 'Failed to fetch character data' 
             });
