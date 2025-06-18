@@ -82,7 +82,7 @@
         {
           "name": "Search Charakter",
           "desc": "charakter",
-          "path": "/search/charakter?q=",
+          "path": "/search/character?q=",
           "status": "ready",
           "params": {
             "query": "input charakter"
